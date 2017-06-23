@@ -5,7 +5,7 @@ BIN      := $(CURDIR)/bin
 
 CC       := g++
 CFLAGS   := -std=c++11 -I$(INCLUDE)
-LDFLAGS  := -lpqxx -lpq
+LDFLAGS  := -lpqxx -lpq -lncursesw
 
 export
 

@@ -1,4 +1,4 @@
-.PHONY: config_tool clean
+.PHONY: clean
 
 CONFIG_MODULES := config_tool db_util
 CONFIG_SRC     := $(foreach subdir, $(CONFIG_MODULES), $(wildcard $(subdir)/*.cpp))
@@ -11,4 +11,4 @@ $(BUILD)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm *.o
+	-rm $(CONFIG_OBJ)

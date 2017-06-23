@@ -10,6 +10,7 @@ class db_util{
         db_util();
         ~db_util();
         string get_character();
+        void print_query(string sql);
 
     private:
         connection* db_conn;

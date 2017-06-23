@@ -26,6 +26,17 @@ string db_util::get_character(){
     return (db_result[0][0].as<string>() + ", " + db_result[0][1].as<string>() + ", " + db_result[0][2].as<string>());
 }
 
+void db_util::print_query(string sql){
+    nontransaction db_nontransaction(*db_conn);
+    /* Execute SQL query */
+    result db_result(db_nontransaction.exec(sql));
+    for (result::const_iterator row = db_result.begin(); row != db_result.end(); row++){
+        for (result::tuple::const_iterator field = row->begin(); field != row->end(); field++)
+            cout << field->c_str() << '\t';
+    cout << endl;
+    }
+}
+
 /*void deprecated() {
     cout << system("pwd") << endl;
     string sql;
