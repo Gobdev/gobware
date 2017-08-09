@@ -3,6 +3,8 @@
 using namespace std;
 using namespace pqxx;
 
+string translate_url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ja&dt=t&q={}";
+
 db_util::db_util(){
     /* Connect to database. */
     db_conn = new connection("dbname = jap_proj "
@@ -18,12 +20,12 @@ db_util::~db_util(){
 
 
 
-string db_util::get_character(){
+string db_util::get_character(int i){
     /* Create a non-transactional object. */
     nontransaction db_nontransaction(*db_conn);
     /* Execute SQL query */
-    result db_result(db_nontransaction.exec("SELECT * FROM words;"));
-    return (db_result[0][0].as<string>() + ", " + db_result[0][1].as<string>() + ", " + db_result[0][2].as<string>());
+    result db_result(db_nontransaction.exec("SELECT * FROM sentences;"));
+    return (db_result[i][1].as<string>() + " - " + db_result[i][2].as<string>() + " - " + db_result[i][3].as<string>());
 }
 
 void db_util::print_query(string sql){

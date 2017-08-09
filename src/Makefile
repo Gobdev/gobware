@@ -1,13 +1,14 @@
 .PHONY: clean
 
-CONFIG_MODULES := config_tool db_util
+CONFIG_MODULES := config_tool db_util graphics
 CONFIG_SRC     := $(foreach subdir, $(CONFIG_MODULES), $(wildcard $(subdir)/*.cpp))
 CONFIG_OBJ     := $(patsubst %.cpp, $(BUILD)/%.o, $(CONFIG_SRC))
 
-config_tool: $(CONFIG_OBJ)
+$(BIN)/config_tool: $(CONFIG_OBJ)
 	$(CC) $(CFLAGS) $(CONFIG_OBJ) -o $(BIN)/config_tool $(LDFLAGS)
 
 $(BUILD)/%.o: $(SRC)/%.cpp
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

@@ -12,7 +12,7 @@ export
 .PHONY: config_tool clean
 
 config_tool:
-	$(MAKE) -C src/ config_tool
+	$(MAKE) -C src/ $(BIN)/config_tool
 
 clean:
 	$(MAKE) -C src/ clean

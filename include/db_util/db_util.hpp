@@ -9,7 +9,7 @@ class db_util{
     public:
         db_util();
         ~db_util();
-        string get_character();
+        string get_character(int i);
         void print_query(string sql);
 
     private:
