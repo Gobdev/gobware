@@ -14,9 +14,12 @@ class input_window : public window {
         // Functions
         void update();
         int run();
+        void reset_input();
+        int unicode_size(string unicode_string);
 
         // Fields
         string title;
         vector<string> lables;
+        vector<string> input;
         int current_index;
 };

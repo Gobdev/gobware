@@ -39,7 +39,7 @@ int main(int argc, char* argv[]){
 	start_color();
     clear();
     noecho();
-    cbreak();	/* Line buffering disabled. pass on everything */
+    //cbreak();	/* Line buffering disabled. pass on everything */
     startx = (80 - WIDTH) / 2;
     starty = (24 - HEIGHT) / 2;
 
@@ -76,7 +76,7 @@ int handle_windows(){
 
     selector -> update();
 	return_code = selector -> run();
-	delete selector;
+	//delete selector;
 	return return_code;
 }
 
