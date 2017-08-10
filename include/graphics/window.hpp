@@ -13,6 +13,7 @@ class window {
 
     protected:
         WINDOW* _window;
+        WINDOW* box_window;
         int colorPair = 2;
         int x;
         int y;

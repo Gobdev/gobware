@@ -6,13 +6,16 @@ window::window(int x, int y, int width, int height){
     this -> y = y;
     this -> width = width;
     this -> height = height;
-    _window = newwin(height, width, y, x);
+    box_window = newwin(height, width, y, x);
+    _window = newwin(height - 2, width - 2, y + 1, x + 1);
+    wborder(_window, ' ', ' ', ' ',' ',' ',' ',' ',' ');
 }
 
 window::~window(){
-    wborder(_window, ' ', ' ', ' ',' ',' ',' ',' ',' ');
-	wrefresh(_window);
+    wborder(box_window, ' ', ' ', ' ',' ',' ',' ',' ',' ');
+	wrefresh(box_window);
 	delwin(_window);
+	delwin(box_window);
 }
 
 void window::setCurrentWindow(){

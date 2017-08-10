@@ -26,21 +26,23 @@ input_window::~input_window(){
 }
 
 void input_window::update(){
-	wattron(_window, COLOR_PAIR(colorPair));
+	wattron(box_window, COLOR_PAIR(colorPair));
     werase(_window);
-    box(_window, 0, 0);
-	wattroff(_window, COLOR_PAIR(colorPair));
+    box(box_window, 0, 0);
+	wattroff(box_window, COLOR_PAIR(colorPair));
     for (int i = 0; i != lables.size(); i++){
-        mvwprintw(_window, 1 + (height / 4) * i, 1, lables[i].c_str());
-        mvwprintw(_window, 2 + (height / 4) * i, 2, input[i].c_str());
+        mvwprintw(_window, (height / 4) * i, 0, lables[i].c_str());
+        mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
-    wmove(_window, 2 + (height / 4) * current_index, 2 + string_index);
+    wmove(_window, 1 + (height / 4) * current_index, 1 + string_index);
+    wrefresh(box_window);
     wrefresh(_window);
 }
 
 int input_window::run(){
     setCurrentWindow();
     curs_set(1);
+    current_index = 0;
     int c;
     bool cont = true;
     c = 0;
