@@ -7,7 +7,7 @@ class window {
         void setCurrentWindow();
         void setNormalWindow();
         virtual void update() = 0;
-        virtual window* handle_character(char ch) = 0;
+        virtual int run() = 0;
         window(int x, int y, int width, int height);
         ~window();
 

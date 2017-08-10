@@ -30,7 +30,7 @@ void selector_window::update(){
     wrefresh(_window);
 }
 
-window* selector_window::handle_character(char ch){
+int selector_window::run(){
     int c = 0;
     bool cont = true;
     curs_set(0);
@@ -50,6 +50,7 @@ window* selector_window::handle_character(char ch){
         update();
     }
     curs_set(1);
+    return 0;
 }
 
 bool selector_window::enter_pressed(){

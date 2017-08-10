@@ -10,7 +10,7 @@ class selector_window : public window {
         selector_window(int x, int y, int width, int height);
         ~selector_window();
         void update();
-        window* handle_character(char ch);
+        int run();
         void add_window(window* new_window, string title);
 
     private:

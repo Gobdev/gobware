@@ -1,7 +1,7 @@
 #include <iostream>
 #include <pqxx/pqxx>
 #include <db_util/db_util.hpp>
-#include <graphics/window_handler.hpp>
+#include <graphics/selector_window.hpp>
 
 using namespace std;
 
@@ -22,13 +22,14 @@ string choices[] = {
 		  };
 int n_choices = sizeof(choices) / sizeof(char *);
 void print_menu(WINDOW *menu_win, int highlight);
+int handle_windows();
 
 int main(int argc, char* argv[]){
     setlocale(LC_ALL, "");
     WINDOW *menu_win;
     int highlight = 1;
     int choice = 0;
-    int c;
+    int c, return_code;
 
     db_util db;
     choices[3] = db.get_character(0).substr(0, 27);
@@ -43,17 +44,39 @@ int main(int argc, char* argv[]){
 
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
 	init_pair(2, COLOR_WHITE, COLOR_BLACK);
-https://stackoverflow.com/questions/21745816/makefile-make-dependency-only-if-file-doesnt-exist
     menu_win = newwin(HEIGHT, WIDTH, starty, startx);
     keypad(menu_win, TRUE);
     mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
-	window_handler window_h = window_handler();
-	window_h.handle_character('c');
+	return_code = handle_windows();
     refresh();
     clrtoeol();
     refresh();
     endwin();
-    return 0;
+    return return_code;
+}
+
+int handle_windows(){
+	/* Setup windows */
+	int return_code;
+    selector_window* selector;
+	selector = new selector_window(0, LINES*3/5, COLS/3, LINES - LINES*3/5);
+    selector -> setCurrentWindow();
+
+    window* selector2 = new selector_window(0, 0, COLS*2/3, LINES*3/5);
+    selector -> add_window(selector2, "Enter sentence");
+
+    selector2 = new selector_window(COLS*2/3, 0, COLS, LINES*3/5);
+    selector -> add_window(selector2, "Enter word");
+
+    selector2 = new selector_window(COLS/3, LINES*3/5, COLS, LINES - LINES*3/5);
+    selector -> add_window(selector2, "Translate");
+
+    selector -> add_window(NULL, "Exit");
+
+    selector -> update();
+	return_code = selector -> run();
+	delete selector;
+	return return_code;
 }
 
 
