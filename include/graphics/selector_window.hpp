@@ -25,4 +25,5 @@ class selector_window : public window {
         vector<window*> windows;
         vector<string> titles;
         int current_index;
+        bool highlight;
 };

@@ -2,6 +2,7 @@
 #include <pqxx/pqxx>
 #include <db_util/db_util.hpp>
 #include <graphics/selector_window.hpp>
+#include <graphics/input_window.hpp>
 
 using namespace std;
 
@@ -62,13 +63,13 @@ int handle_windows(){
 	selector = new selector_window(0, LINES*3/5, COLS/3, LINES - LINES*3/5);
     selector -> setCurrentWindow();
 
-    window* selector2 = new selector_window(0, 0, COLS*2/3, LINES*3/5);
+    window* selector2 = new input_window(0, 0, COLS*2/3, LINES*3/5, "Sentence");
     selector -> add_window(selector2, "Enter sentence");
 
-    selector2 = new selector_window(COLS*2/3, 0, COLS, LINES*3/5);
+    selector2 = new input_window(COLS*2/3, 0, COLS, LINES*3/5, "Word");
     selector -> add_window(selector2, "Enter word");
 
-    selector2 = new selector_window(COLS/3, LINES*3/5, COLS, LINES - LINES*3/5);
+    selector2 = new input_window(COLS/3, LINES*3/5, COLS, LINES - LINES*3/5, "shieet");
     selector -> add_window(selector2, "Translate");
 
     selector -> add_window(NULL, "Exit");

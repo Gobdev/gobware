@@ -4,6 +4,8 @@
 selector_window::selector_window(int x, int y, int width, int height) :
                                  window(x, y, width, height){
     /* Constructor */
+    highlight = true;
+    current_index = 0;
     update();
     keypad(_window, TRUE);
 }
@@ -16,11 +18,12 @@ selector_window::~selector_window(){
 }
 
 void selector_window::update(){
-	wattron(_window, COLOR_PAIR(colorPair));
+    if (highlight)
+	   wattron(_window, COLOR_PAIR(colorPair));
     box(_window, 0, 0);
 	wattroff(_window, COLOR_PAIR(colorPair));
     for (int i = 0; i != titles.size(); i++){
-        if (i == current_index){
+        if (i == current_index && highlight){
             wattron(_window, COLOR_PAIR(1));
         } else {
             wattron(_window, COLOR_PAIR(2));
@@ -44,7 +47,6 @@ int selector_window::run(){
                 current_index += current_index < titles.size() - 1 ? 1 : 0;
                 break;
             case 10:
-                mvwprintw(_window, 10, 1, "Enter pressed.");
                 cont = enter_pressed();
         }
         update();
@@ -54,11 +56,16 @@ int selector_window::run(){
 }
 
 bool selector_window::enter_pressed(){
+    highlight = false;
+    update();
     if (current_index >= titles.size() - 1){
         return false;
     } else if (current_index < 0) {
         return false;
+    } else {
+        windows[current_index] -> run();
     }
+    highlight = true;
     return true;
 }
 
