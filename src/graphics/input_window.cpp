@@ -34,7 +34,7 @@ void input_window::update(){
         mvwprintw(_window, 1 + (height / 4) * i, 1, lables[i].c_str());
         mvwprintw(_window, 2 + (height / 4) * i, 2, input[i].c_str());
     }
-    wmove(_window, 2 + (height / 4) * current_index, 2 + unicode_size(input[current_index]));
+    wmove(_window, 2 + (height / 4) * current_index, 2 + string_index);
     wrefresh(_window);
 }
 
@@ -47,29 +47,45 @@ int input_window::run(){
     while(cont){
         update();
         c = wgetch(_window);
-        switch(c){
-            case KEY_DOWN:
-                current_index -= current_index > 0 ? 1 : 0;
-                break;
-            case KEY_UP:
-                current_index += current_index < input.size() - 1 ? 1 : 0;
-                break;
-            case KEY_ENTER:
-            case 10:
-                cont = false;
-                break;
-            case KEY_BACKSPACE:
-                input[current_index].erase(input[current_index].size() - 1);
-                break;
-            default:
-                input[current_index] += c;
-        }
+        cont = handle_character(c);
     }
     setNormalWindow();
     reset_input();
     update();
     curs_set(0);
     return 0;
+}
+
+bool input_window::handle_character(int c){
+    switch(c){
+        case KEY_DOWN:
+            current_index += current_index < input.size() - 1 ? 1 : 0;
+            string_index = unicode_size(input[current_index]);
+            break;
+        case KEY_UP:
+            current_index -= current_index > 0 ? 1 : 0;
+            string_index = unicode_size(input[current_index]);
+            break;
+        case KEY_LEFT:
+            string_index -= string_index > 0 ? 1 : 0;
+            break;
+        case KEY_RIGHT:
+            string_index += string_index < input[current_index].size() ? 1 : 0;
+            break;
+        case KEY_ENTER:
+        case 10:
+            return false;
+        case KEY_BACKSPACE:
+            if (input[current_index].size() > 0){
+                input[current_index].erase(input[current_index].size() - 1);
+                string_index--;
+            }
+            break;
+        default:
+            input[current_index] += c;
+            string_index++;
+    }
+    return true;
 }
 
 void input_window::reset_input(){
