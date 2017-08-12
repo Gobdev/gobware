@@ -6,6 +6,7 @@ input_window::input_window(int x, int y, int width, int height, string title) :
                            window(x, y, width, height){
     /* Constructor */
     this -> title = title;
+    this -> current_index = 0;
     lables.push_back("Kanji");
     lables.push_back("Hiragana");
     lables.push_back("Translation");
@@ -34,7 +35,9 @@ void input_window::update(){
         mvwprintw(_window, (height / 4) * i, 0, lables[i].c_str());
         mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
-    wmove(_window, 1 + (height / 4) * current_index, 1 + string_index);
+    mvwprintw(_window, height - 4, 1, "Cancel");
+    mvwprintw(_window, height - 4, width - 6, "Add");
+    wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
     wrefresh(box_window);
     wrefresh(_window);
 }
@@ -69,18 +72,21 @@ bool input_window::handle_character(int c){
             string_index = unicode_size(input[current_index]);
             break;
         case KEY_LEFT:
-            string_index -= string_index > 0 ? 1 : 0;
+            move_left();
             break;
         case KEY_RIGHT:
-            string_index += string_index < input[current_index].size() ? 1 : 0;
+            move_right();
             break;
         case KEY_ENTER:
         case 10:
+        case 27:
             return false;
         case KEY_BACKSPACE:
             if (input[current_index].size() > 0){
-                input[current_index].erase(input[current_index].size() - 1);
-                string_index--;
+                while((input[current_index].at(string_index - 1) & 0xC0) == 0x80){
+                    input[current_index].erase(--string_index, 1);
+                }
+                input[current_index].erase(--string_index, 1);
             }
             break;
         default:
@@ -88,6 +94,16 @@ bool input_window::handle_character(int c){
             string_index++;
     }
     return true;
+}
+
+void input_window::move_left(){
+    string_index -= string_index > 0 ? 1 : 0;
+    while(string_index > 0 && (input[current_index].at(--string_index) & 0xC0) == 0x80);
+}
+
+void input_window::move_right(){
+    string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
+    while(string_index < input[current_index].size() && ++string_index < input[current_index].size() && (input[current_index].at(string_index) & 0xC0) == 0x80);
 }
 
 void input_window::reset_input(){
@@ -100,7 +116,14 @@ int input_window::unicode_size(string unicode_string){
     int len = 0;
     const char* s = unicode_string.c_str();
     while(*s){
-        len += (*s++ & 0xC0) != 0x80;
+        len++;
+        *s++;
+        if ((*s & 0xC0) == 0x80){
+            len++;
+            while((*s & 0xC0) == 0x80){
+                *s++;
+            }
+        }
     }
     return len;
 }

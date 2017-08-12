@@ -17,6 +17,8 @@ class input_window : public window {
         void reset_input();
         int unicode_size(string unicode_string);
         bool handle_character(int c);
+        void move_left();
+        void move_right();
 
         // Fields
         string title;
