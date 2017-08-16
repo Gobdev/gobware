@@ -7,8 +7,8 @@ string translate_url = "https://translate.googleapis.com/translate_a/single?clie
 
 db_util::db_util(){
     /* Connect to database. */
-    db_conn = new connection("dbname = jap_proj "
-                             "user = jap_proj_user "
+    db_conn = new connection("dbname = gobware "
+                             "user = gob_user "
                              "password = psqlisstupid "
                              "hostaddr = 127.0.0.1 "
                              "port = 5432");
