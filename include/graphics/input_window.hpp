@@ -19,6 +19,8 @@ class input_window : public window {
         bool handle_character(int c);
         void move_left();
         void move_right();
+        void move_up();
+        void move_down();
 
         // Fields
         string title;

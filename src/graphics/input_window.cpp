@@ -35,8 +35,7 @@ void input_window::update(){
         mvwprintw(_window, (height / 4) * i, 0, lables[i].c_str());
         mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
-    mvwprintw(_window, height - 4, 1, "Cancel");
-    mvwprintw(_window, height - 4, width - 6, "Add");
+    mvwprintw(_window, height - 4, width / 2 - 4, "Add");
     wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
     wrefresh(box_window);
     wrefresh(_window);
@@ -64,12 +63,10 @@ int input_window::run(){
 bool input_window::handle_character(int c){
     switch(c){
         case KEY_DOWN:
-            current_index += current_index < input.size() - 1 ? 1 : 0;
-            string_index = unicode_size(input[current_index]);
+            move_down();
             break;
         case KEY_UP:
-            current_index -= current_index > 0 ? 1 : 0;
-            string_index = unicode_size(input[current_index]);
+            move_up();
             break;
         case KEY_LEFT:
             move_left();
@@ -82,7 +79,7 @@ bool input_window::handle_character(int c){
         case 27:
             return false;
         case KEY_BACKSPACE:
-            if (input[current_index].size() > 0){
+            if (current_index < input.size() && input[current_index].size() > 0){
                 while((input[current_index].at(string_index - 1) & 0xC0) == 0x80){
                     input[current_index].erase(--string_index, 1);
                 }
@@ -96,14 +93,34 @@ bool input_window::handle_character(int c){
     return true;
 }
 
+void input_window::move_down(){
+    current_index += current_index < input.size() ? 1 : 0;
+    if (current_index < input.size())
+        string_index = unicode_size(input[current_index]);
+    else
+        curs_set(0);
+}
+
+void input_window::move_up(){
+    current_index -= current_index > 0 ? 1 : 0;
+    if (current_index < input.size()){
+        curs_set(1);
+        string_index = unicode_size(input[current_index]);
+    }
+}
+
 void input_window::move_left(){
-    string_index -= string_index > 0 ? 1 : 0;
-    while(string_index > 0 && (input[current_index].at(--string_index) & 0xC0) == 0x80);
+    if (current_index < input.size()){
+        string_index -= string_index > 0 ? 1 : 0;
+        while(string_index > 0 && (input[current_index].at(--string_index) & 0xC0) == 0x80);
+    }
 }
 
 void input_window::move_right(){
-    string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
-    while(string_index < input[current_index].size() && ++string_index < input[current_index].size() && (input[current_index].at(string_index) & 0xC0) == 0x80);
+    if (current_index < input.size()){
+        string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
+        while(string_index < input[current_index].size() && ++string_index < input[current_index].size() && (input[current_index].at(string_index) & 0xC0) == 0x80);
+    }
 }
 
 void input_window::reset_input(){
