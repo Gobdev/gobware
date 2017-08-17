@@ -89,7 +89,7 @@ bool input_window::handle_character(int c){
             }
             break;
         default:
-            input[current_index] += c;
+            input[current_index].insert(string_index, 1, c);
             string_index++;
     }
     return true;
