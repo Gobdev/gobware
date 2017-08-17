@@ -1,3 +1,6 @@
+#ifndef DBUTIL_H
+#define DBUTIL_H
+
 #include <pqxx/pqxx>
 #include <iostream>
 
@@ -15,3 +18,5 @@ class db_util{
     private:
         connection* db_conn;
 };
+
+#endif

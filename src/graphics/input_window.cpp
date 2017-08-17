@@ -3,11 +3,12 @@
 
 using namespace std;
 
-input_window::input_window(int x, int y, int width, int height, string title) :
+input_window::input_window(int x, int y, int width, int height, string title, db_util* db) :
                            window(x, y, width, height){
     /* Constructor */
     this -> title = title;
     this -> current_index = 0;
+    this -> db = db;
     lables.push_back("Kanji");
     lables.push_back("Hiragana");
     lables.push_back("Translation");
@@ -86,7 +87,8 @@ bool input_window::handle_character(int c){
         case KEY_ENTER:
         case 10:
             if (current_index != input.size())
-               break;
+                break;
+            send_to_database();
         case 27:
             current_index = 0;
             update();
@@ -98,8 +100,10 @@ bool input_window::handle_character(int c){
             del();
             break;
         default:
-            input[current_index].insert(string_index, 1, c);
-            string_index++;
+            if (current_index < input.size()){
+                input[current_index].insert(string_index, 1, c);
+                string_index++;
+        }
     }
     return true;
 }
@@ -161,6 +165,10 @@ void input_window::reset_input(){
     for (vector<string>::iterator it = input.begin(); it != input.end(); ++it){
         *it = "";
     }
+}
+
+void input_window::send_to_database(){
+
 }
 
 bool input_window::is_unicode_char(char c){

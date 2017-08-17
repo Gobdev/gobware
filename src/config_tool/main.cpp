@@ -1,12 +1,11 @@
 #include <iostream>
 #include <pqxx/pqxx>
-#include <db_util/db_util.hpp>
 #include <graphics/selector_window.hpp>
 #include <graphics/input_window.hpp>
 
 using namespace std;
 
-pqxx::connection* db_conn;
+
 
 #define WIDTH 30
 #define HEIGHT 10
@@ -32,8 +31,6 @@ int main(int argc, char* argv[]){
     int choice = 0;
     int c, return_code;
 
-    db_util db;
-    choices[3] = db.get_character(0).substr(0, 27);
 
     initscr();
 	start_color();
@@ -62,19 +59,6 @@ int handle_windows(){
     selector_window* selector;
 	selector = new selector_window(0, LINES*3/5, COLS/3, LINES - LINES*3/5);
     selector -> setCurrentWindow();
-
-    window* selector2 = new input_window(0, 0, COLS*2/3, LINES*3/5, "Sentence");
-    selector -> add_window(selector2, "Enter sentence");
-
-    selector2 = new input_window(COLS*2/3, 0, COLS/3, LINES*3/5, "Word");
-    selector -> add_window(selector2, "Enter word");
-
-    selector2 = new input_window(COLS/3, LINES*3/5, COLS*2/3, LINES - LINES*3/5, "shieet");
-    selector -> add_window(selector2, "Translate");
-
-    selector -> add_window(NULL, "Exit");
-
-    selector -> update();
 	return_code = selector -> run();
 	//delete selector;
 	return return_code;

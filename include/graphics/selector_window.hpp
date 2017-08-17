@@ -1,4 +1,5 @@
-#include <graphics/window.hpp>
+#include <graphics/input_window.hpp>
+#include <db_util/db_util.hpp>
 #include <string>
 #include <vector>
 
@@ -26,4 +27,5 @@ class selector_window : public window {
         vector<string> titles;
         int current_index;
         bool highlight;
+        db_util* db;
 };

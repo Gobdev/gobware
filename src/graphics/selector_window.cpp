@@ -4,10 +4,22 @@
 selector_window::selector_window(int x, int y, int width, int height) :
                                  window(x, y, width, height){
     /* Constructor */
+    window* input;
     highlight = true;
     current_index = 0;
-    update();
+    db = new db_util;
+    input = new input_window(0, 0, COLS*2/3, LINES*3/5, "Sentence", db);
+    add_window(input, "Enter sentence");
+
+    input = new input_window(COLS*2/3, 0, COLS/3, LINES*3/5, "Word", db);
+    add_window(input, "Enter word");
+
+    input = new input_window(COLS/3, LINES*3/5, COLS*2/3, LINES - LINES*3/5, "shieet", db);
+    add_window(input, "Translate");
+
+    add_window(NULL, "Exit");
     keypad(_window, TRUE);
+    update();
 }
 
 selector_window::~selector_window(){

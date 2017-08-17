@@ -1,4 +1,5 @@
 #include <graphics/window.hpp>
+#include <db_util/db_util.hpp>
 #include <string>
 #include <vector>
 
@@ -7,7 +8,7 @@ using namespace std;
 class input_window : public window {
 
     public:
-        input_window(int x, int y, int width, int height, string title);
+        input_window(int x, int y, int width, int height, string title, db_util* db);
         ~input_window();
 
     private:
@@ -24,6 +25,7 @@ class input_window : public window {
         void move_down();
         void backspace();
         void del();
+        void send_to_database();
         void print_add();
 
         // Fields
@@ -32,4 +34,5 @@ class input_window : public window {
         vector<string> input;
         int current_index;
         int string_index;
+        db_util* db;
 };
