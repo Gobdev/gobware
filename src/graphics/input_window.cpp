@@ -80,13 +80,10 @@ bool input_window::handle_character(int c){
         case 27:
             return false;
         case KEY_BACKSPACE:
-            if (current_index < input.size() && input[current_index].size() > 0){
-                while(is_unicode_char(input[current_index].at(string_index - 1))){
-                    input[current_index].erase(--string_index, 1);
-                }
-                if (string_index > 0)
-                    input[current_index].erase(--string_index, 1);
-            }
+            backspace();
+            break;
+        case KEY_DC:
+            del();
             break;
         default:
             input[current_index].insert(string_index, 1, c);
@@ -125,6 +122,25 @@ void input_window::move_right(){
         string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
         while(string_index < input[current_index].size() && is_unicode_char(input[current_index].at(string_index))){
             string_index++;
+        }
+    }
+}
+
+void input_window::backspace(){
+    if (current_index < input.size() && input[current_index].size() > 0){
+        while(string_index > 0 && is_unicode_char(input[current_index].at(string_index - 1))){
+            input[current_index].erase(--string_index, 1);
+        }
+        if (string_index > 0)
+            input[current_index].erase(--string_index, 1);
+    }
+}
+
+void input_window::del(){
+   if (current_index < input.size() && string_index < input[current_index].size()){
+        input[current_index].erase(string_index, 1);
+        while(string_index < input[current_index].size() && is_unicode_char(input[current_index].at(string_index))){
+            input[current_index].erase(string_index, 1);
         }
     }
 }

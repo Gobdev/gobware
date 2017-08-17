@@ -22,6 +22,8 @@ class input_window : public window {
         void move_right();
         void move_up();
         void move_down();
+        void backspace();
+        void del();
 
         // Fields
         string title;
