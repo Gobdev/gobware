@@ -19,9 +19,9 @@ selector_window::~selector_window(){
 
 void selector_window::update(){
     if (highlight)
-	   wattron(box_window, COLOR_PAIR(colorPair));
+        wattron(box_window, COLOR_PAIR(colorPair));
     box(box_window, 0, 0);
-	wattroff(box_window, COLOR_PAIR(colorPair));
+    wattroff(box_window, COLOR_PAIR(colorPair));
     for (int i = 0; i != titles.size(); i++){
         if (i == current_index && highlight){
             wattron(_window, COLOR_PAIR(1));
