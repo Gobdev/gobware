@@ -25,10 +25,9 @@ void selector_window::update(){
     for (int i = 0; i != titles.size(); i++){
         if (i == current_index && highlight){
             wattron(_window, COLOR_PAIR(1));
-        } else {
-            wattron(_window, COLOR_PAIR(2));
         }
         mvwprintw(_window, 1 + 2 * i, 0, titles[i].c_str());
+        wattroff(_window, COLOR_PAIR(1));
     }
     wrefresh(box_window);
     wrefresh(_window);
