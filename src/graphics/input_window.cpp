@@ -31,15 +31,24 @@ void input_window::update(){
     wattron(box_window, COLOR_PAIR(colorPair));
     werase(_window);
     box(box_window, 0, 0);
-	wattroff(box_window, COLOR_PAIR(colorPair));
+    wattroff(box_window, COLOR_PAIR(colorPair));
     for (int i = 0; i != lables.size(); i++){
         mvwprintw(_window, (height / 4) * i, 0, lables[i].c_str());
         mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
-    mvwprintw(_window, height - 4, width / 2 - 4, to_string(unicode_size(input[current_index])).c_str());
-    wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
+    print_add();
+    if (current_index < input.size())
+        wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
     wrefresh(box_window);
     wrefresh(_window);
+}
+
+void input_window::print_add(){
+    if (current_index == input.size())
+        wattron(_window, COLOR_PAIR(colorPair));
+    mvwprintw(_window, height - 4, width / 2 - 4, "Add");
+    wattroff(_window, COLOR_PAIR(colorPair));
+
 }
 
 int input_window::run(){
@@ -77,6 +86,8 @@ bool input_window::handle_character(int c){
             break;
         case KEY_ENTER:
         case 10:
+            if (current_index != input.size())
+               break;
         case 27:
             return false;
         case KEY_BACKSPACE:

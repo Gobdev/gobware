@@ -24,6 +24,7 @@ class input_window : public window {
         void move_down();
         void backspace();
         void del();
+        void print_add();
 
         // Fields
         string title;
