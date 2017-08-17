@@ -1,7 +1,9 @@
 #include <graphics/input_window.hpp>
+#include <gobcode/unicode.hpp>
 #include <string>
 
 using namespace std;
+using namespace unicode;
 
 input_window::input_window(int x, int y, int width, int height, string title, db_util* db) :
                            window(x, y, width, height){
@@ -168,25 +170,12 @@ void input_window::reset_input(){
 }
 
 void input_window::send_to_database(){
-
-}
-
-bool input_window::is_unicode_char(char c){
-    return (c & 0xC0) == 0x80;
-}
-
-int input_window::unicode_size(string unicode_string){
-    int len = 0;
-    const char* s = unicode_string.c_str();
-    while(*s){
-        len++;
-        s++;
-        if (is_unicode_char(*s)){
-            len++;
-            while(is_unicode_char(*s)){
-                s++;
-            }
-        }
+    for (vector<string>::iterator it = input.begin(); it != input.end(); ++it){
+        if (*it == "")
+            return;
     }
-    return len;
+    if (title == "Sentence")
+        db -> enter_sentence(input[0], input[1], input[2], input[3]);
+    else
+        db -> enter_kanji(input[0], input[1], input[2], input[3]);
 }

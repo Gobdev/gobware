@@ -1,6 +1,6 @@
 .PHONY: clean
 
-CONFIG_MODULES := config_tool db_util graphics
+CONFIG_MODULES := config_tool db_util graphics gobcode
 CONFIG_SRC     := $(foreach subdir, $(CONFIG_MODULES), $(wildcard $(subdir)/*.cpp))
 CONFIG_OBJ     := $(patsubst %.cpp, $(BUILD)/%.o, $(CONFIG_SRC))
 

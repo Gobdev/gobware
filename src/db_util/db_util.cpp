@@ -39,6 +39,15 @@ void db_util::print_query(string sql){
     }
 }
 
+
+void db_util::enter_sentence(string orig, string hira, string trans, string cont){
+
+}
+
+void db_util::enter_kanji(string kanji, string hira, string trans, string notes){
+
+}
+
 /*void deprecated() {
     cout << system("pwd") << endl;
     string sql;

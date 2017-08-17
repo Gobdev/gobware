@@ -1,3 +1,6 @@
+#ifndef INPUT_WINDOW_H
+#define INPUT_WINDOW_H
+
 #include <graphics/window.hpp>
 #include <db_util/db_util.hpp>
 #include <string>
@@ -16,8 +19,6 @@ class input_window : public window {
         void update();
         int run();
         void reset_input();
-        bool is_unicode_char(char c);
-        int unicode_size(string unicode_string);
         bool handle_character(int c);
         void move_left();
         void move_right();
@@ -36,3 +37,5 @@ class input_window : public window {
         int string_index;
         db_util* db;
 };
+
+#endif
