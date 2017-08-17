@@ -15,6 +15,7 @@ class input_window : public window {
         void update();
         int run();
         void reset_input();
+        bool is_unicode_char(char c);
         int unicode_size(string unicode_string);
         bool handle_character(int c);
         void move_left();

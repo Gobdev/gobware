@@ -1,4 +1,5 @@
 #include <graphics/input_window.hpp>
+#include <string>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ input_window::~input_window(){
 }
 
 void input_window::update(){
-	wattron(box_window, COLOR_PAIR(colorPair));
+    wattron(box_window, COLOR_PAIR(colorPair));
     werase(_window);
     box(box_window, 0, 0);
 	wattroff(box_window, COLOR_PAIR(colorPair));
@@ -35,7 +36,7 @@ void input_window::update(){
         mvwprintw(_window, (height / 4) * i, 0, lables[i].c_str());
         mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
-    mvwprintw(_window, height - 4, width / 2 - 4, "Add");
+    mvwprintw(_window, height - 4, width / 2 - 4, to_string(unicode_size(input[current_index])).c_str());
     wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
     wrefresh(box_window);
     wrefresh(_window);
@@ -80,10 +81,11 @@ bool input_window::handle_character(int c){
             return false;
         case KEY_BACKSPACE:
             if (current_index < input.size() && input[current_index].size() > 0){
-                while((input[current_index].at(string_index - 1) & 0xC0) == 0x80){
+                while(is_unicode_char(input[current_index].at(string_index - 1))){
                     input[current_index].erase(--string_index, 1);
                 }
-                input[current_index].erase(--string_index, 1);
+                if (string_index > 0)
+                    input[current_index].erase(--string_index, 1);
             }
             break;
         default:
@@ -112,14 +114,18 @@ void input_window::move_up(){
 void input_window::move_left(){
     if (current_index < input.size()){
         string_index -= string_index > 0 ? 1 : 0;
-        while(string_index > 0 && (input[current_index].at(--string_index) & 0xC0) == 0x80);
+        while(string_index > 0 && is_unicode_char(input[current_index].at(string_index))){
+            string_index--;
+        }
     }
 }
 
 void input_window::move_right(){
     if (current_index < input.size()){
         string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
-        while(string_index < input[current_index].size() && ++string_index < input[current_index].size() && (input[current_index].at(string_index) & 0xC0) == 0x80);
+        while(string_index < input[current_index].size() && is_unicode_char(input[current_index].at(string_index))){
+            string_index++;
+        }
     }
 }
 
@@ -129,16 +135,20 @@ void input_window::reset_input(){
     }
 }
 
+bool input_window::is_unicode_char(char c){
+    return (c & 0xC0) == 0x80;
+}
+
 int input_window::unicode_size(string unicode_string){
     int len = 0;
     const char* s = unicode_string.c_str();
     while(*s){
         len++;
-        *s++;
-        if ((*s & 0xC0) == 0x80){
+        s++;
+        if (is_unicode_char(*s)){
             len++;
-            while((*s & 0xC0) == 0x80){
-                *s++;
+            while(is_unicode_char(*s)){
+                s++;
             }
         }
     }
