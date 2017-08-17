@@ -41,7 +41,14 @@ void db_util::print_query(string sql){
 
 
 void db_util::enter_sentence(string orig, string hira, string trans, string cont){
-
+    work insert(*db_conn);
+    string sql = ("INSERT INTO sentences (original, hiragana, translation, context) VALUES (" +
+                   insert.quote(orig) + ", " +
+                   insert.quote(hira) + ", " +
+                   insert.quote(trans) + ", " +
+                   insert.quote(cont) + ")");
+    insert.exec(sql);
+    insert.commit();
 }
 
 void db_util::enter_kanji(string kanji, string hira, string trans, string notes){
