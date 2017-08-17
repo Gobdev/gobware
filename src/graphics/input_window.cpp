@@ -48,7 +48,6 @@ void input_window::print_add(){
         wattron(_window, COLOR_PAIR(colorPair));
     mvwprintw(_window, height - 4, width / 2 - 4, "Add");
     wattroff(_window, COLOR_PAIR(colorPair));
-
 }
 
 int input_window::run(){
@@ -89,6 +88,8 @@ bool input_window::handle_character(int c){
             if (current_index != input.size())
                break;
         case 27:
+            current_index = 0;
+            update();
             return false;
         case KEY_BACKSPACE:
             backspace();
