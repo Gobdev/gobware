@@ -5,6 +5,7 @@ Gobware currently only supports unix operating systems.
 
   - Select a window.
   - Input text to be entered into database (not sent to the database at the moment).
+  - Delete written text in input windows.
   
 ## Planned Features:
 
