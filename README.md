@@ -1,4 +1,4 @@
-# Gobware v0.2
+# Gobware v0.21
 Gobware currently only supports unix operating systems.  
 
 ## Currently Working Features:
