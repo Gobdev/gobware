@@ -137,7 +137,7 @@ void input_window::move_left(){
 
 void input_window::move_right(){
     if (current_index < input.size()){
-        string_index += string_index < unicode_size(input[current_index]) ? 1 : 0;
+        string_index += string_index < input[current_index].size() - 1 ? 1 : 0;
         while(string_index < input[current_index].size() && is_unicode_char(input[current_index].at(string_index))){
             string_index++;
         }
