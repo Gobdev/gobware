@@ -1,18 +1,25 @@
-SRC 	 := $(CURDIR)/src
-INCLUDE  := $(CURDIR)/include
-BUILD    := $(CURDIR)/build
-BIN      := $(CURDIR)/bin
+SRC 	 := src
+INCLUDE  := include
+BUILD    := build
+BIN      := bin
 
 CC       := g++
 CFLAGS   := -std=c++11 -I$(INCLUDE)
 LDFLAGS  := -lpqxx -lpq -lncursesw
 
-export
+SRCFILES := $(shell find src/ -name *.cpp)   #All $SRC/.cpp files
+OBJFILES := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.o, $(SRCFILES))
+DEPFILES := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.d, $(SRCFILES))
 
-.PHONY: config_tool clean
+$(BUILD)/%.o: $(SRC)/%.cpp
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-config_tool:
-	$(MAKE) -C src/ $(BIN)/config_tool
+$(BIN)/config_tool: $(OBJFILES)
+	$(CC) $(CFLAGS) $(OBJFILES) -o $@ $(LDFLAGS)
 
-clean:
-	$(MAKE) -C src/ clean
+include $(DEPFILES)
+
+$(BUILD)/%.d: $(SRC)/%.cpp
+	@mkdir -p $(@D)
+	bash ./depend.sh `dirname $<` $(CFLAGS) $< > $@
