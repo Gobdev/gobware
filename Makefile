@@ -11,15 +11,24 @@ SRCFILES := $(shell find src/ -name *.cpp)   #All $SRC/.cpp files
 OBJFILES := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.o, $(SRCFILES))
 DEPFILES := $(patsubst $(SRC)/%.cpp, $(BUILD)/%.d, $(SRCFILES))
 
+.PHONY: config_tool
+config_tool: $(BIN)/config_tool
+
 $(BUILD)/%.o: $(SRC)/%.cpp
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BIN)/config_tool: $(OBJFILES)
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(OBJFILES) -o $@ $(LDFLAGS)
 
-include $(DEPFILES)
+-include $(DEPFILES)
 
 $(BUILD)/%.d: $(SRC)/%.cpp
 	@mkdir -p $(@D)
-	bash ./depend.sh `dirname $<` $(CFLAGS) $< > $@
+	@bash ./depend.sh `dirname $<` $(CFLAGS) $< > $@
+
+.PHONY: clean
+clean:
+	@rm -rfv build/
+	@rm -rfv bin/
