@@ -10,6 +10,7 @@ input_window::input_window(int x, int y, int width, int height, string title, db
     /* Constructor */
     this -> title = title;
     this -> current_index = 0;
+    this -> string_index = 0;
     this -> db = db;
     lables.push_back("Kanji");
     lables.push_back("Hiragana");
@@ -40,8 +41,9 @@ void input_window::update(){
         mvwprintw(_window, 1 + (height / 4) * i, 1, input[i].c_str());
     }
     print_add();
+    int cursor_index = unicode_size(input[current_index].substr(0, string_index)) + 1;
     if (current_index < input.size())
-        wmove(_window, 1 + (height / 4) * current_index, 1 + unicode_size(input[current_index].substr(0, string_index)));
+        wmove(_window, 1 + (height / 4) * current_index + cursor_index / (width - 2), cursor_index% (width - 2));
     wrefresh(box_window);
     wrefresh(_window);
 }
@@ -57,6 +59,7 @@ int input_window::run(){
     setCurrentWindow();
     curs_set(1);
     current_index = 0;
+    string_index = 0;
     int c;
     bool cont = true;
     c = 0;

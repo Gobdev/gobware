@@ -1,4 +1,5 @@
 #include <db_util/db_util.hpp>
+#include <gobcode/unicode.hpp>
 
 using namespace std;
 using namespace pqxx;
@@ -33,7 +34,7 @@ void db_util::print_query(string sql){
     /* Execute SQL query */
     result db_result(db_nontransaction.exec(sql));
     for (result::const_iterator row = db_result.begin(); row != db_result.end(); row++){
-        for (result::tuple::const_iterator field = row->begin(); field != row->end(); field++)
+        for (row::const_iterator field = row->begin(); field != row->end(); field++)
             cout << field->c_str() << '\t';
     cout << endl;
     }
@@ -52,7 +53,14 @@ void db_util::enter_sentence(string orig, string hira, string trans, string cont
 }
 
 void db_util::enter_kanji(string kanji, string hira, string trans, string notes){
-
+    work insert(*db_conn);
+    string sql = ("INSERT INTO jukugo (kanji, hiragana, translation, notes) VALUES (" +
+                   insert.quote(kanji) + ", " +
+                   insert.quote(hira) + ", " +
+                   insert.quote(trans) + ", " +
+                   insert.quote(notes) + ")");
+    insert.exec(sql);
+    insert.commit();
 }
 
 /*void deprecated() {

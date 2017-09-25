@@ -7,6 +7,7 @@ selector_window::selector_window(int x, int y, int width, int height) :
     window* input;
     highlight = true;
     current_index = 0;
+    setCurrentWindow();
     db = new db_util;
     input = new input_window(0, 0, COLS*2/3, LINES*3/5, "Sentence", db);
     add_window(input, "Enter sentence");

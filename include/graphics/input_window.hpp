@@ -15,7 +15,7 @@ class input_window : public window {
         ~input_window();
 
     private:
-        // Functions
+        // Functions.
         void update();
         int run();
         void reset_input();
